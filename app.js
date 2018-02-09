@@ -35,6 +35,7 @@ app.use(bodyParser.json());
 
 const userRoute = require('./routes/users');
 
+
 app.get('/', (req, res) => res.send('Hello World!'))
 
 // Users Route
