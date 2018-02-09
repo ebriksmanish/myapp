@@ -3,8 +3,11 @@ const app = express();
 
 // Requiring Mongoose
 const mongoose = require('mongoose');
+
+// Requiring Config 
+const config = require('./config/database');
 // connect mongoose to database
-mongoose.connect('mongodb://localhost/myappDB');
+mongoose.connect(config.database);
 
 const db = mongoose.connection;
 // checking if mongoose connected to mongo DB 

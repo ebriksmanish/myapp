@@ -19,4 +19,15 @@ route.post('/register', function(req, res){
     }) 
 });
 
+route.post('/login', function(req, res){
+    let value = {
+        email : req.body.Email,
+        password : req.body.Password
+    };
+    userSchema.find(value, function(err, records){
+        if(err) return res.json("error")
+        else return res.json(records)
+    })
+});
+
 module.exports = route;
