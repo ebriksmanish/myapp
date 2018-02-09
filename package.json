@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/ebriksmanish/myapp/issues"
   },
-  "homepage": "https://github.com/ebriksmanish/myapp#readme"
+  "homepage": "https://github.com/ebriksmanish/myapp#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.4"
+  }
 }
