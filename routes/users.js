@@ -5,33 +5,48 @@ const route = express.Router();
 
 const userSchema = require('../models/users');
 
+// Requiring Bcrypt
+
+const bcrypt = require('bcrypt');
+
 // Requiring JsonWebToken
 
 const jwt = require('jsonwebtoken');
 
 // Making Express ROUTE Points
 route.post('/register', function(req, res){
-    let value = {
-        username : req.body.Username,
-        email : req.body.Email,
-        password : req.body.Password
-    };
-    userSchema.create(value, function(err, records){
-        if(err) return res.json("error")
-        else return res.json(records)
-    }) 
+    bcrypt.hash(req.body.Password, 9, function(err, hash) {
+        // Store hash in your password DB.
+        if(err) return res.json("error in hashing")
+        else {
+            let value = {
+                username : req.body.Username,
+                email : req.body.Email,
+                password : hash
+            };
+            userSchema.create(value, function(err, records){
+                if(err) return res.json("error")
+                else return res.json(records)
+            }) 
+        }
+    })
 });
 
 route.post('/login', function(req, res){
     let value = {
-        email : req.body.Email,
-        password : req.body.Password
+        email : req.body.Email
     };
-    userSchema.find(value, function(err, records){
+    userSchema.findOne(value, function(err, records){
         if(err) return res.json("error")
         else {
-            let myToken = jwt.sign({ id: userSchema._id }, "secretkey", { expiresIn: 86400 });
-            return res.json({ records : records, token : myToken})
+            bcrypt.compare(req.body.Password, records.password, function(err, result) {
+                // res == true
+                if(err) return res.json("error in login")
+                else {
+                    let myToken = jwt.sign({ id: userSchema._id }, "secretkey", { expiresIn: 86400 });
+                    return res.json({ records : records, token : myToken})
+                }
+            });
         }        
     })
 });
