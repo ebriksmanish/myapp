@@ -30,10 +30,23 @@ route.post('/login', function(req, res){
     userSchema.find(value, function(err, records){
         if(err) return res.json("error")
         else {
-            let token = jwt.sign({ id: userSchema._id }, "secretkey", { expiresIn: 86400 });
-            return res.json({ records : records, token : token})
+            let myToken = jwt.sign({ id: userSchema._id }, "secretkey", { expiresIn: 86400 });
+            return res.json({ records : records, token : myToken})
         }        
     })
+});
+
+// verifying nothing else
+// x-access-token in header and token number , only one parameter
+route.get('/me', function(req, res) {
+    let myToken = req.headers['x-access-token'];
+    if (!myToken) return res.status(401).send({ auth: false, message: 'No token provided.' });
+    
+    jwt.verify(myToken, "secretkey", function(err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+      
+      res.status(200).send(decoded);
+    });
 });
 
 module.exports = route;
