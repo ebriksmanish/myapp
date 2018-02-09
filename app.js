@@ -28,20 +28,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+// Requiring Routers
+
+const userRoute = require('./routes/users');
+
 app.get('/', (req, res) => res.send('Hello World!'))
 
-// Making Express ROUTE Points
-app.post('/register', function(req, res){
-    let value = {
-        username : req.body.Username,
-        email : req.body.Email,
-        password : req.body.Password
-    };
-    userSchema.create(value, function(err, records){
-        if(err) return res.json("error")
-        else return res.json(records)
-    }) 
-});
+// Users Route
+
+app.use('/users', userRoute);
 
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
