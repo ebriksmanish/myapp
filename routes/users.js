@@ -5,6 +5,9 @@ const route = express.Router();
 
 const userSchema = require('../models/users');
 
+// Requiring JsonWebToken
+
+const jwt = require('jsonwebtoken');
 
 // Making Express ROUTE Points
 route.post('/register', function(req, res){
@@ -26,7 +29,10 @@ route.post('/login', function(req, res){
     };
     userSchema.find(value, function(err, records){
         if(err) return res.json("error")
-        else return res.json(records)
+        else {
+            let token = jwt.sign({ id: userSchema._id }, "secretkey", { expiresIn: 86400 });
+            return res.json({ records : records, token : token})
+        }        
     })
 });
 
